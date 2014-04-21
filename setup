@@ -1,0 +1,82 @@
+# -*- mode: sh -*-
+# vi: set ft=sh:
+#!/usr/bin/env bash
+
+set -e
+
+# Disable ssh dns to avoid long pause before login
+sudo grep -q '^UseDNS no' /etc/ssh/sshd_config
+sudo /etc/init.d/ssh reload
+
+# Update initial dependencies on server
+sudo apt-get -y update
+
+# Install add-apt-repository command
+sudo apt-get -y -q install \
+  software-properties-common \
+  python-software-properties \
+  python \
+  curl \
+  zsh \
+  g++ \
+  localepurge \
+  make \
+  libssl-dev \
+  build-essential \
+  openssl \
+  libssl-dev \
+  git-core \
+  pkg-config \
+  imagemagick \
+  graphicsmagick \
+  unicode-data \
+  cpulimit
+  ruby \
+  ruby-dev \
+  rubygems \
+  vim \
+  clamav \
+  clamtk \
+  screen
+
+# Add MongoDB repository
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+
+# Add Node.JS PPA
+sudo add-apt-repository -y ppa:chris-lea/node.js
+
+# Update repositories
+sudo apt-get -y update
+
+# Install previous packages from PPA's
+sudo apt-get -y -q install \
+  nodejs \
+  redis-server \
+  mongodb-10gen
+
+# Install NPM global packages
+wget -P ~/ https://raw.github.com/niftylettuce/development-environment-setup/master/.jshintrc
+sudo npm install -g bower grunt-cli jshint
+
+# One final upgrade for everything
+sudo apt-get -y -q upgrade
+sudo apt-get -y -q autoremove
+
+# Set DNS to Google Public DNS
+sudo dpkg-reconfigure resolvconf
+sudo wget -q https://raw.github.com/niftylettuce/linux-mint-ubuntu-nodejs-hacker-setup/master/resolv.conf -O /tmp/resolv.conf
+sudo mv /tmp/resolv.conf > /etc/resolv.conf
+echo "supersede domain-name-servers 8.8.8.8,8.8.4.4;" | sudo tee /etc/dhcp3/dhclient.conf
+sudo resolvconf -u
+
+#
+# TODO:
+#
+# 1. Change default shell to zsh:
+# chsh -s `which zsh`
+#
+# 2. Set up Ubuntu Security Configuration:
+# <https://github.com/niftylettuce/amazon-ec2-node-stack#ubuntu-security-configuration>
+#
+

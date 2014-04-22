@@ -29,7 +29,7 @@ sudo apt-get -y -q install \
   imagemagick \
   graphicsmagick \
   unicode-data \
-  cpulimit
+  cpulimit \
   ruby \
   ruby-dev \
   rubygems \

@@ -19,7 +19,6 @@ sudo apt-get -y -q install \
   curl \
   zsh \
   g++ \
-  localepurge \
   make \
   libssl-dev \
   build-essential \
@@ -79,4 +78,5 @@ sudo resolvconf -u
 # 2. Set up Ubuntu Security Configuration:
 # <https://github.com/niftylettuce/amazon-ec2-node-stack#ubuntu-security-configuration>
 #
+# 3. Install `localepurge`
 
